@@ -210,7 +210,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                                 <SidebarContent />
                             </DialogPanel>
                         </TransitionChild>
-                        <div className="flex-shrink-0 w-14" aria-hidden="true">
+                        <div className="shrink-0 w-14" aria-hidden="true">
                             {/* Dummy element to force sidebar to shrink to fit close icon */}
                         </div>
                     </div>
