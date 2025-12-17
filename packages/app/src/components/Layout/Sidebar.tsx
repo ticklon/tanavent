@@ -1,7 +1,7 @@
 
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition, TransitionChild, DialogPanel } from '@headlessui/react';
-import { X, LogOut, Building, Layers, User, UserRoundCog, UserCog, Settings, Languages } from 'lucide-react';
+import { X, LogOut, Building, Layers, UserCog, Settings, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 import { useViewStore } from '../../stores/viewStore';
