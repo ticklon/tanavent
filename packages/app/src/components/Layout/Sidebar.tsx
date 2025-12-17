@@ -1,23 +1,19 @@
 
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition, TransitionChild, DialogPanel } from '@headlessui/react';
-import { X, LogOut, Building, Layers, User, UserRoundCog, UserCog } from 'lucide-react';
+import { X, LogOut, Building, Layers, User, UserRoundCog, UserCog, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 import { useViewStore } from '../../stores/viewStore';
 import { auth } from '../../lib/firebase';
 import { createAuthClient } from '../../lib/client';
 import { UserSettingsModal } from '../../features/settings/components/UserSettingsModal';
+import { useSectionList } from '../../features/organization/api/useSectionHooks';
 
 interface SidebarProps {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
 }
-
-type Section = {
-    id: string;
-    name: string;
-};
 
 type Organization = {
     id: string;
@@ -27,45 +23,35 @@ type Organization = {
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     const { t } = useTranslation(['common', 'organization']);
     const { user } = useAuthStore();
-    const { activeOrganizationId, activeSectionId, updateCtx } = useViewStore();
+    const { activeOrganizationId, activeSectionId, updateCtx, changeView } = useViewStore();
+    
+    // Auto-update sections using React Query
+    const { data: sections = [] } = useSectionList();
 
-    const [sections, setSections] = useState<Section[]>([]);
     const [organizationName, setOrganizationName] = useState('');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchOrgName = async () => {
             if (!user || !activeOrganizationId) return;
 
             try {
                 const token = await user.getIdToken();
                 const client = createAuthClient(token);
 
-                // Fetch Org Name (Ideally this should be in store or context, but fetching list for now)
-                // or we can fetch single org endpoint if it existed.
-                // Re-using list endpoint for now.
+                // Fetch Org Name
                 const resOrg = await client.api.organizations.$get();
                 if (resOrg.ok) {
                     const orgs = await resOrg.json();
                     const currentOrg = orgs.find((o: Organization) => o.id === activeOrganizationId);
                     if (currentOrg) setOrganizationName(currentOrg.name);
                 }
-
-                // Fetch Sections
-                const resSec = await client.api.organizations[':orgId'].sections.$get({
-                    param: { orgId: activeOrganizationId }
-                });
-
-                if (resSec.ok) {
-                    const data = await resSec.json();
-                    setSections(data);
-                }
             } catch (error) {
-                console.error('Failed to fetch sidebar data', error);
+                console.error('Failed to fetch org name', error);
             }
         };
 
-        fetchData();
+        fetchOrgName();
     }, [user, activeOrganizationId]);
 
     const handleLogout = () => {
@@ -92,10 +78,10 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             {/* Navigation / Sections */}
             <div className="flex-1 overflow-y-auto p-4">
                 <div className="text-xs font-bold text-text-muted uppercase mb-2 tracking-wider">
-                    Sections
+                    {t('organization:settings.sections_title')}
                 </div>
                 {sections.length === 0 ? (
-                    <div className="text-sm text-text-muted italic pl-2">No sections</div>
+                    <div className="text-sm text-text-muted italic pl-2">{t('organization:settings.no_sections')}</div>
                 ) : (
                     <ul className="space-y-1">
                         {sections.map(section => (
@@ -114,6 +100,19 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                         ))}
                     </ul>
                 )}
+                
+                <div className="mt-4 pt-4 border-t border-border">
+                    <button
+                        onClick={() => {
+                            changeView({ view: 'settings' });
+                            setIsOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-text-main hover:bg-gray-100 transition-colors"
+                    >
+                        <Settings size={18} />
+                        <span>{t('organization:settings.sidebar_link')}</span>
+                    </button>
+                </div>
             </div>
 
             {/* Footer / User Info */}

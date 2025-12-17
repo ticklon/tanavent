@@ -15,5 +15,23 @@
     },
     "msg": {
         "create_success": "組織を作成しました"
+    },
+    "settings": {
+        "title": "組織設定",
+        "subtitle": "セクションと設定を管理します",
+        "sections_title": "セクション",
+        "new_section": "新規セクション",
+        "table_name": "名前",
+        "table_actions": "操作",
+        "modal_create_title": "新規セクション作成",
+        "modal_edit_title": "セクション編集",
+        "create_section_label": "セクション名",
+        "placeholder_section_name": "例: ワインセラーA",
+        "confirm_delete": "このセクションを削除してもよろしいですか？",
+        "error_create": "セクションの作成に失敗しました",
+        "error_update": "セクションの更新に失敗しました",
+        "error_delete": "セクションの削除に失敗しました",
+        "no_sections": "セクションが見つかりません。新規作成してください。",
+        "sidebar_link": "組織設定"
     }
 }

@@ -15,5 +15,23 @@
     },
     "msg": {
         "create_success": "Organization created successfully"
+    },
+    "settings": {
+        "title": "Organization Settings",
+        "subtitle": "Manage your sections and settings",
+        "sections_title": "Sections",
+        "new_section": "New Section",
+        "table_name": "Name",
+        "table_actions": "Actions",
+        "modal_create_title": "Create New Section",
+        "modal_edit_title": "Edit Section",
+        "create_section_label": "Section Name",
+        "placeholder_section_name": "e.g., Wine Cellar A",
+        "confirm_delete": "Are you sure you want to delete this section?",
+        "error_create": "Failed to create section",
+        "error_update": "Failed to update section",
+        "error_delete": "Failed to delete section",
+        "no_sections": "No sections found. Create one to get started.",
+        "sidebar_link": "Organization Settings"
     }
 }
