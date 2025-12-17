@@ -77,4 +77,78 @@ app.post('/:orgId/sections', async (c) => {
     }
 });
 
+// PUT /api/organizations/:orgId/sections/:sectionId
+// Update a section
+app.put('/:orgId/sections/:sectionId', async (c) => {
+    const orgId = c.req.param('orgId');
+    const sectionId = c.req.param('sectionId');
+    const currentUser = c.get('user');
+    const db = createDb(c.env.DB);
+    const { name } = await c.req.json();
+
+    if (!name) {
+        return c.json({ error: 'Name is required' }, 400);
+    }
+
+    // Verify membership
+    const membership = await db.query.member.findFirst({
+        where: and(
+            eq(member.organizationId, orgId),
+            eq(member.userId, currentUser.uid)
+        )
+    });
+
+    if (!membership) {
+        return c.json({ error: 'Forbidden' }, 403);
+    }
+
+    try {
+        await db.update(section)
+            .set({ name })
+            .where(and(
+                eq(section.id, sectionId),
+                eq(section.organizationId, orgId)
+            ));
+
+        return c.json({ id: sectionId, name });
+    } catch (e: any) {
+        console.error('Failed to update section:', e);
+        return c.json({ error: 'Failed to update section' }, 500);
+    }
+});
+
+// DELETE /api/organizations/:orgId/sections/:sectionId
+// Delete a section
+app.delete('/:orgId/sections/:sectionId', async (c) => {
+    const orgId = c.req.param('orgId');
+    const sectionId = c.req.param('sectionId');
+    const currentUser = c.get('user');
+    const db = createDb(c.env.DB);
+
+    // Verify membership
+    const membership = await db.query.member.findFirst({
+        where: and(
+            eq(member.organizationId, orgId),
+            eq(member.userId, currentUser.uid)
+        )
+    });
+
+    if (!membership) {
+        return c.json({ error: 'Forbidden' }, 403);
+    }
+
+    try {
+        await db.delete(section)
+            .where(and(
+                eq(section.id, sectionId),
+                eq(section.organizationId, orgId)
+            ));
+
+        return c.json({ success: true });
+    } catch (e: any) {
+        console.error('Failed to delete section:', e);
+        return c.json({ error: 'Failed to delete section' }, 500);
+    }
+});
+
 export default app;

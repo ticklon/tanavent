@@ -14,6 +14,7 @@ import "./app.css";
 import "./lib/i18n";
 import { OrganizationSelect } from "./features/organization/components/OrganizationSelect";
 import { OrganizationCreate } from "./features/organization/components/OrganizationCreate";
+import { OrganizationSettings } from "./features/organization/components/OrganizationSettings";
 import { MainLayout } from "./components/Layout/MainLayout";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
     activeOrganizationId,
     updateCtx,
     openDetail,
+    lastViewState,
   } = useViewStore();
   const { data, isLoading: isInventoryLoading, error } = useInventoryQuery();
   const {
@@ -100,54 +102,60 @@ function App() {
 
   return (
     <MainLayout>
-      <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-lg font-bold text-tanavent-navy-light uppercase tracking-wider">
-          {t("inventory:list.title")}
-        </h2>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="bg-tanavent-blue text-white px-4 py-2 rounded-lg font-bold shadow-sm active:scale-95 transition"
-        >
-          + {t("common:add_item")}
-        </button>
-      </div>
-
-      {!activeSectionId ? (
-        <div className="text-center p-10 bg-white rounded-lg shadow mt-10">
-          <p className="text-gray-500 mb-4">No section selected</p>
-          <p className="text-sm text-gray-400">
-            Please select or create settings from the sidebar.
-          </p>
-        </div>
+      {lastViewState.view === "settings" ? (
+        <OrganizationSettings />
       ) : (
         <>
-          {isInventoryLoading && (
-            <p className="text-center py-10">Loading...</p>
-          )}
-          {error && (
-            <p className="text-red-500 text-center py-10">
-              Error loading inventory
-            </p>
+          <div className="mb-6 flex justify-between items-center">
+            <h2 className="text-lg font-bold text-tanavent-navy-light uppercase tracking-wider">
+              {t("inventory:list.title")}
+            </h2>
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="bg-tanavent-blue text-white px-4 py-2 rounded-lg font-bold shadow-sm active:scale-95 transition"
+            >
+              + {t("common:add_item")}
+            </button>
+          </div>
+
+          {!activeSectionId ? (
+            <div className="text-center p-10 bg-white rounded-lg shadow mt-10">
+              <p className="text-gray-500 mb-4">No section selected</p>
+              <p className="text-sm text-gray-400">
+                Please select or create settings from the sidebar.
+              </p>
+            </div>
+          ) : (
+            <>
+              {isInventoryLoading && (
+                <p className="text-center py-10">Loading...</p>
+              )}
+              {error && (
+                <p className="text-red-500 text-center py-10">
+                  Error loading inventory
+                </p>
+              )}
+
+              {data && (
+                <InventoryList
+                  // @ts-ignore: Temporary fix
+                  items={data?.items || []}
+                  onSelect={(id) => openDetail(id)}
+                />
+              )}
+            </>
           )}
 
-          {data && (
-            <InventoryList
-              // @ts-ignore: Temporary fix
-              items={data?.items || []}
-              onSelect={(id) => openDetail(id)}
-            />
-          )}
+          {/* Detail Modal handles its own state via global store */}
+          <InventoryDetailModal />
+
+          {/* Add Modal controlled by local state */}
+          <InventoryAddModal
+            isOpen={isAddModalOpen}
+            onClose={() => setIsAddModalOpen(false)}
+          />
         </>
       )}
-
-      {/* Detail Modal handles its own state via global store */}
-      <InventoryDetailModal />
-
-      {/* Add Modal controlled by local state */}
-      <InventoryAddModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-      />
     </MainLayout>
   );
 }
