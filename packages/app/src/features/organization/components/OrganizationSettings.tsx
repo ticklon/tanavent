@@ -5,6 +5,7 @@ import {
   useSectionMutation,
   Section,
 } from "../api/useSectionHooks";
+import { Plus } from "lucide-react";
 
 type ModalProps = {
   isOpen: boolean;
@@ -129,7 +130,7 @@ export const OrganizationSettings = () => {
             onClick={() => setIsCreateOpen(true)}
             className="text-sm bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg font-medium hover:bg-gray-50 hover:text-tanavent-blue hover:border-tanavent-blue transition-all shadow-sm flex items-center gap-2"
           >
-            <span className="text-lg leading-none">+</span> {t("organization:settings.new_section")}
+            <Plus size={18}/> {t("organization:settings.new_section")}
           </button>
         </div>
 
