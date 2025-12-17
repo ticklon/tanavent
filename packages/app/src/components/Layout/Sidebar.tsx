@@ -104,7 +104,6 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       </div>
       <div className="py-1 border-b border-border">
         <div className="flex items-center justify-center gap-2 text-tanavent-navy">
-          <Home size={36} strokeWidth={1} />
           <div className="flex flex-col justify-center items-center">
             <span className="text-xs font-light text-tanavent-blue">{t("organization:label.active_org")}</span>
             <span className="truncate">{organizationName || "..."}</span>
