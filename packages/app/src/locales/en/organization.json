@@ -5,6 +5,7 @@
     },
     "label": {
         "name": "Organization Name",
+        "active_org": "Active Organization",
         "no_org": "You don't belong to any organization"
     },
     "action": {
