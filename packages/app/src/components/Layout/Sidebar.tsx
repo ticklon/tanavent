@@ -1,7 +1,7 @@
 
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition, TransitionChild, DialogPanel } from '@headlessui/react';
-import { X, LogOut, Building, Layers, User, UserRoundCog, UserCog, Settings } from 'lucide-react';
+import { X, LogOut, Building, Layers, User, UserRoundCog, UserCog, Settings, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 import { useViewStore } from '../../stores/viewStore';
@@ -23,7 +23,7 @@ type Organization = {
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     const { t } = useTranslation(['common', 'organization']);
     const { user } = useAuthStore();
-    const { activeOrganizationId, activeSectionId, updateCtx, changeView } = useViewStore();
+    const { activeOrganizationId, activeSectionId, updateCtx, changeView, language, changeLanguage } = useViewStore();
     
     // Auto-update sections using React Query
     const { data: sections = [] } = useSectionList();
@@ -56,6 +56,11 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
     const handleLogout = () => {
         auth.signOut();
+    };
+
+    const handleLanguageToggle = () => {
+        const nextLang = language === 'ja' ? 'en' : 'ja';
+        changeLanguage(nextLang);
     };
 
     const handleSectionClick = (sectionId: string) => {
@@ -116,10 +121,10 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             </div>
 
             {/* Footer / User Info */}
-            <div className="p-4 border-t border-border bg-gray-50">
+            <div className="p-4 border-t border-border bg-gray-50 space-y-3">
                 <button
                     onClick={() => setIsSettingsOpen(true)}
-                    className="w-full flex items-center gap-3 mb-4 rounded-2xl p-2 bg-tanavent-blue hover:bg-tanavent-blue-hover transition-colors text-left"
+                    className="w-full flex items-center gap-3 rounded-2xl p-2 bg-tanavent-blue hover:bg-tanavent-blue-hover transition-colors text-left"
                 >
                     <div className="w-8 h-8 rounded-full bg-tanavent-navy text-tanavent-blue-light flex items-center justify-center">
                         <UserCog size={20} />
@@ -133,13 +138,27 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                         </p>
                     </div>
                 </button>
-                <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-700 bg-white border border-border rounded-md hover:bg-gray-50 transition"
-                >
-                    <LogOut size={18} />
-                    {t('common:logout')}
-                </button>
+                
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        onClick={handleLanguageToggle}
+                        className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-bold text-gray-700 bg-white border border-border rounded-md hover:bg-gray-50 transition"
+                    >
+                        <Languages size={18} className="text-gray-400" />
+                        <div className="flex items-center gap-1">
+                            <span className={language === 'ja' ? 'text-tanavent-blue' : 'text-gray-300 font-extralight'}>JA</span>
+                            <span className="text-gray-200 font-normal">/</span>
+                            <span className={language === 'en' ? 'text-tanavent-blue' : 'text-gray-300 font-extralight'}>EN</span>
+                        </div>
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-border rounded-md hover:bg-gray-50 transition"
+                    >
+                        <LogOut size={18} />
+                        {t('common:logout')}
+                    </button>
+                </div>
             </div>
 
             <UserSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
