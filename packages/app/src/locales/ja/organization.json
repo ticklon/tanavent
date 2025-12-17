@@ -1,0 +1,19 @@
+{
+    "title": {
+        "select": "組織を選択",
+        "create": "新しい組織を作成"
+    },
+    "label": {
+        "name": "組織名",
+        "no_org": "所属している組織がありません"
+    },
+    "action": {
+        "select": "選択",
+        "create": "作成",
+        "creating": "作成中...",
+        "back": "戻る"
+    },
+    "msg": {
+        "create_success": "組織を作成しました"
+    }
+}

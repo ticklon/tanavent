@@ -1,0 +1,11 @@
+name = "tanavent-api"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tanavent-db"
+database_id = "xxxx-xxxx-xxxx-xxxx" # Placeholder
+migrations_dir = "../shared/drizzle"
+
+[vars]
+FIREBASE_PROJECT_ID = "tanavent-889b7" # Overridden by .dev.vars locally and Secrets in production

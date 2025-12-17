@@ -1,0 +1,19 @@
+{
+    "title": {
+        "select": "Select Organization",
+        "create": "Create New Organization"
+    },
+    "label": {
+        "name": "Organization Name",
+        "no_org": "You don't belong to any organization"
+    },
+    "action": {
+        "select": "Select",
+        "create": "Create",
+        "creating": "Creating...",
+        "back": "Back"
+    },
+    "msg": {
+        "create_success": "Organization created successfully"
+    }
+}

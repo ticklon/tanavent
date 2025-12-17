@@ -1,0 +1,11 @@
+{
+    "save": "Save",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "back": "Back",
+    "add_item": "Add Item",
+    "loading": "Loading...",
+    "error_loading": "Error loading data",
+    "close": "Close"
+}

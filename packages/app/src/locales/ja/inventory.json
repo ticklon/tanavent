@@ -1,0 +1,14 @@
+{
+    "list": {
+        "title": "在庫一覧",
+        "vintage": "ヴィンテージ",
+        "name": "商品名",
+        "stock": "在庫数",
+        "unit": "単位",
+        "create": "作成"
+    },
+    "delete": {
+        "confirmTitle": "このアイテムを削除しますか？",
+        "confirmDescription": "この操作は取り消せません。"
+    }
+}

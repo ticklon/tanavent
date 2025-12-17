@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+    /* Brand Colors */
+    --color-tanavent-navy: #011C26;
+    --color-tanavent-navy-light: #1A3E4D;
+
+    --color-tanavent-blue: #0B8CBF;
+    --color-tanavent-blue-hover: #0976A1;
+    --color-tanavent-blue-light: #E0F2F7;
+
+    --color-tanavent-green: #69BFA0;
+    --color-tanavent-green-dark: #3D7A60;
+    --color-tanavent-green-bg: #E6F7F0;
+
+    --color-tanavent-error: #EF4444;
+    --color-tanavent-warning: #F59E0B;
+
+    /* Neutrals */
+    --color-surface-base: #F8FAFC;
+    --color-surface-card: #FFFFFF;
+    --color-border: #E2E8F0;
+    --color-text-main: #0F172A;
+    --color-text-muted: #64748B;
+
+    /* Typography */
+    --font-sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", "Meiryo", "Yu Gothic", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}

@@ -1,0 +1,19 @@
+{
+    "title": "設定",
+    "tab": {
+        "profile": "プロフィール",
+        "organization": "組織"
+    },
+    "profile": {
+        "name": "名前",
+        "email": "メールアドレス",
+        "update": "更新"
+    },
+    "organization": {
+        "current": "現在の組織",
+        "switch": "切り替え",
+        "create_new": "新しい組織を作成",
+        "name_label": "組織名",
+        "create_action": "作成"
+    }
+}

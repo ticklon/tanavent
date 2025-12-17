@@ -1,0 +1,14 @@
+{
+    "list": {
+        "title": "Inventory List",
+        "vintage": "Vintage",
+        "name": "Item Name",
+        "stock": "Quantity",
+        "unit": "Unit",
+        "create": "Create"
+    },
+    "delete": {
+        "confirmTitle": "Delete this item?",
+        "confirmDescription": "This action cannot be undone."
+    }
+}

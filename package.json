@@ -1,0 +1,23 @@
+{
+    "name": "tanavent-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "dev:api": "npm run dev --workspace=@tanavent/api",
+        "dev:app": "npm run dev --workspace=@tanavent/app",
+        "db:generate": "npm run generate --workspace=@tanavent/shared",
+        "db:migrate": "npm run migrate --workspace=@tanavent/shared"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "eslint": "^9.0.0",
+        "prettier": "^3.0.0"
+    },
+    "overrides": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    }
+}

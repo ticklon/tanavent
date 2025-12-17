@@ -1,0 +1,203 @@
+
+import { Fragment, useState, useEffect } from 'react';
+import { Dialog, Transition, TransitionChild, DialogPanel } from '@headlessui/react';
+import { X, LogOut, Building, Layers, User, UserRoundCog, UserCog } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../stores/authStore';
+import { useViewStore } from '../../stores/viewStore';
+import { auth } from '../../lib/firebase';
+import { createAuthClient } from '../../lib/client';
+import { UserSettingsModal } from '../../features/settings/components/UserSettingsModal';
+
+interface SidebarProps {
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+}
+
+type Section = {
+    id: string;
+    name: string;
+};
+
+type Organization = {
+    id: string;
+    name: string;
+}
+
+export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
+    const { t } = useTranslation(['common', 'organization']);
+    const { user } = useAuthStore();
+    const { activeOrganizationId, activeSectionId, updateCtx } = useViewStore();
+
+    const [sections, setSections] = useState<Section[]>([]);
+    const [organizationName, setOrganizationName] = useState('');
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!user || !activeOrganizationId) return;
+
+            try {
+                const token = await user.getIdToken();
+                const client = createAuthClient(token);
+
+                // Fetch Org Name (Ideally this should be in store or context, but fetching list for now)
+                // or we can fetch single org endpoint if it existed.
+                // Re-using list endpoint for now.
+                const resOrg = await client.api.organizations.$get();
+                if (resOrg.ok) {
+                    const orgs = await resOrg.json();
+                    const currentOrg = orgs.find((o: Organization) => o.id === activeOrganizationId);
+                    if (currentOrg) setOrganizationName(currentOrg.name);
+                }
+
+                // Fetch Sections
+                const resSec = await client.api.organizations[':orgId'].sections.$get({
+                    param: { orgId: activeOrganizationId }
+                });
+
+                if (resSec.ok) {
+                    const data = await resSec.json();
+                    setSections(data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch sidebar data', error);
+            }
+        };
+
+        fetchData();
+    }, [user, activeOrganizationId]);
+
+    const handleLogout = () => {
+        auth.signOut();
+    };
+
+    const handleSectionClick = (sectionId: string) => {
+        if (activeOrganizationId) {
+            updateCtx(activeOrganizationId, sectionId);
+            setIsOpen(false); // Close mobile sidebar on select
+        }
+    };
+
+    const SidebarContent = () => (
+        <div className="flex flex-col h-full bg-surface-base border-r border-border">
+            {/* Header / Org Name */}
+            <div className="p-4 border-b border-border">
+                <div className="flex items-center gap-2 text-tanavent-navy font-bold text-lg">
+                    <Building size={24} />
+                    <span className="truncate">{organizationName || '...'}</span>
+                </div>
+            </div>
+
+            {/* Navigation / Sections */}
+            <div className="flex-1 overflow-y-auto p-4">
+                <div className="text-xs font-bold text-text-muted uppercase mb-2 tracking-wider">
+                    Sections
+                </div>
+                {sections.length === 0 ? (
+                    <div className="text-sm text-text-muted italic pl-2">No sections</div>
+                ) : (
+                    <ul className="space-y-1">
+                        {sections.map(section => (
+                            <li key={section.id}>
+                                <button
+                                    onClick={() => handleSectionClick(section.id)}
+                                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeSectionId === section.id
+                                        ? 'bg-tanavent-blue text-white shadow-sm'
+                                        : 'text-text-main hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <Layers size={18} />
+                                    <span>{section.name}</span>
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+
+            {/* Footer / User Info */}
+            <div className="p-4 border-t border-border bg-gray-50">
+                <button
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="w-full flex items-center gap-3 mb-4 rounded-2xl p-2 bg-tanavent-blue hover:bg-tanavent-blue-hover transition-colors text-left"
+                >
+                    <div className="w-8 h-8 rounded-full bg-tanavent-navy text-tanavent-blue-light flex items-center justify-center">
+                        <UserCog size={20} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-tanavent-blue-light truncate">
+                            {user?.displayName || 'User'}
+                        </p>
+                        <p className="text-xs text-tanavent-blue-light truncate">
+                            {user?.email}
+                        </p>
+                    </div>
+                </button>
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-gray-700 bg-white border border-border rounded-md hover:bg-gray-50 transition"
+                >
+                    <LogOut size={18} />
+                    {t('common:logout')}
+                </button>
+            </div>
+
+            <UserSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+        </div>
+    );
+
+    return (
+        <>
+            {/* Desktop Sidebar */}
+            <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-10">
+                <SidebarContent />
+            </div>
+
+            {/* Mobile Sidebar */}
+            <Transition show={isOpen} as={Fragment}>
+                <Dialog as="div" className="relative z-40 md:hidden" onClose={setIsOpen}>
+                    <TransitionChild
+                        as={Fragment}
+                        enter="transition-opacity ease-linear duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="transition-opacity ease-linear duration-300"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+                    </TransitionChild>
+
+                    <div className="fixed inset-0 z-40 flex">
+                        <TransitionChild
+                            as={Fragment}
+                            enter="transition ease-in-out duration-300 transform"
+                            enterFrom="-translate-x-full"
+                            enterTo="translate-x-0"
+                            leave="transition ease-in-out duration-300 transform"
+                            leaveFrom="translate-x-0"
+                            leaveTo="-translate-x-full"
+                        >
+                            <DialogPanel className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+                                <div className="absolute top-0 right-0 -mr-12 pt-2">
+                                    <button
+                                        type="button"
+                                        className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        <X className="h-6 w-6 text-white" aria-hidden="true" />
+                                    </button>
+                                </div>
+                                <SidebarContent />
+                            </DialogPanel>
+                        </TransitionChild>
+                        <div className="flex-shrink-0 w-14" aria-hidden="true">
+                            {/* Dummy element to force sidebar to shrink to fit close icon */}
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition >
+        </>
+    );
+};

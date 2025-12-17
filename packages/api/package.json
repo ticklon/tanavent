@@ -1,0 +1,22 @@
+{
+    "name": "@tanavent/api",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "wrangler dev src/index.ts",
+        "deploy": "wrangler deploy --minify src/index.ts"
+    },
+    "dependencies": {
+        "@tanavent/shared": "*",
+        "drizzle-orm": "^0.45.1",
+        "hono": "^4.0.0",
+        "jose": "^4.15.9",
+        "uuid": "^11.1.0"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20251211.0",
+        "firebase-admin": "^13.6.0",
+        "typescript": "^5.0.0",
+        "wrangler": "^3.0.0"
+    }
+}

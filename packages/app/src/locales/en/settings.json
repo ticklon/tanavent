@@ -1,0 +1,19 @@
+{
+    "title": "Settings",
+    "tab": {
+        "profile": "Profile",
+        "organization": "Organization"
+    },
+    "profile": {
+        "name": "Name",
+        "email": "Email",
+        "update": "Update"
+    },
+    "organization": {
+        "current": "Current Organization",
+        "switch": "Switch",
+        "create_new": "Create New Organization",
+        "name_label": "Organization Name",
+        "create_action": "Create"
+    }
+}
