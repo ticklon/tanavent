@@ -7,6 +7,11 @@
         "unit": "Unit",
         "create": "Create"
     },
+    "tab": {
+        "inventory": "Inventory",
+        "purchasing": "Purchasing",
+        "stocktaking": "Stocktaking"
+    },
     "delete": {
         "confirmTitle": "Delete this item?",
         "confirmDescription": "This action cannot be undone."

@@ -89,6 +89,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const handleSectionClick = (sectionId: string) => {
     if (activeOrganizationId) {
       updateCtx(activeOrganizationId, sectionId);
+      changeView({ view: "inventory" }); // Ensure we switch back to the main dashboard (inventory view)
       setIsOpen(false); // Close mobile sidebar on select
     }
   };
