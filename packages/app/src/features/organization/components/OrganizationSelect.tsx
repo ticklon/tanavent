@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../stores/authStore';
 import { useViewStore } from '../../../stores/viewStore';
 import { createAuthClient } from '../../../lib/client';
@@ -19,7 +20,8 @@ interface OrganizationSelectProps {
 export const OrganizationSelect = ({ onCreateClick }: OrganizationSelectProps) => {
     const { t } = useTranslation('organization');
     const { user } = useAuthStore();
-    const { updateCtx } = useViewStore();
+    const { setActiveOrganizationId } = useViewStore();
+    const navigate = useNavigate();
     const [orgs, setOrgs] = useState<Organization[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -44,8 +46,8 @@ export const OrganizationSelect = ({ onCreateClick }: OrganizationSelectProps) =
     }, [user]);
 
     const handleSelect = (orgId: string) => {
-        // Init with null section as per "no default section" spec
-        updateCtx(orgId, null as any);
+        setActiveOrganizationId(orgId);
+        navigate('/');
     };
 
     if (loading) {

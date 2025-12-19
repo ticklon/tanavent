@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../stores/authStore';
 import { useViewStore } from '../../../stores/viewStore';
 import { createAuthClient } from '../../../lib/client';
@@ -13,7 +14,8 @@ interface OrganizationCreateProps {
 export const OrganizationCreate = ({ onBack }: OrganizationCreateProps) => {
     const { t } = useTranslation(['organization', 'common']);
     const { user } = useAuthStore();
-    const { updateCtx } = useViewStore();
+    const { setActiveOrganizationId } = useViewStore();
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -40,7 +42,8 @@ export const OrganizationCreate = ({ onBack }: OrganizationCreateProps) => {
             const data = await res.json();
 
             // Auto select created org
-            updateCtx(data.id, null as any); // No default section
+            setActiveOrganizationId(data.id);
+            navigate('/');
 
         } catch (err) {
             console.error(err);

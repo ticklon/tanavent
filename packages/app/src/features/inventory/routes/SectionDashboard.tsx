@@ -1,31 +1,38 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 import { Package, ShoppingCart, ClipboardList } from "lucide-react";
 import { useViewStore } from "../../../stores/viewStore";
 import { useInventoryQuery } from "../api/useInventoryHooks";
 import { InventoryList } from "../components/InventoryList";
 import { InventoryAddModal } from "../components/InventoryAddModal";
+import { useSectionList } from "../../organization/api/useSectionHooks";
 
 type TabType = "inventory" | "purchasing" | "stocktaking";
 
 export const SectionDashboard = () => {
   const { t } = useTranslation(["common", "inventory"]);
-  const { activeSectionId, openDetail, lastViewState, changeView } =
-    useViewStore();
-  const { data, isLoading, error } = useInventoryQuery();
+  // ViewStore no longer manages section/view state
+  const { openDetail } = useViewStore(); // Keep openDetail for now if it's still global (or move to URL later)
+  
+  const { sectionId, view } = useParams<{ sectionId: string; view?: string }>();
+  const navigate = useNavigate();
 
-  // Sync tab state with global ViewStore
-  // If view is 'dashboard' or other non-specific, default to 'inventory'
-  const currentView = lastViewState.view;
+  // Fetch sections to get name
+  const { data: sections } = useSectionList();
+  const activeSection = sections?.find((s) => s.id === sectionId);
+
+  // Determine active tab from URL param
   const activeTab: TabType =
-    currentView === "purchasing" || currentView === "stocktaking"
-      ? currentView
+    view === "purchasing" || view === "stocktaking"
+      ? view
       : "inventory";
+
+  const { data, isLoading, error } = useInventoryQuery(sectionId); // Pass sectionId explicitly
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-
-  if (!activeSectionId) {
+  if (!sectionId) {
     return (
       <div className="flex flex-col items-center justify-center h-[50vh] text-center p-8">
         <div className="bg-gray-100 p-4 rounded-full mb-4">
@@ -55,8 +62,19 @@ export const SectionDashboard = () => {
     },
   ] as const;
 
+  const handleTabChange = (tabId: string) => {
+      navigate(`/sections/${sectionId}/${tabId}`);
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-2 md:p-6 space-y-6">
+      {/* Mobile Header: Active Section Name */}
+      <div className="md:hidden pb-2 border-b border-gray-100">
+          <h1 className="text-xl font-bold text-tanavent-navy">
+              {activeSection?.name || '...'}
+          </h1>
+      </div>
+
       {/* Header & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Mobile: Tab Dropdown */}
@@ -64,7 +82,7 @@ export const SectionDashboard = () => {
           <div className="relative">
             <select
               value={activeTab}
-              onChange={(e) => changeView({ view: e.target.value as any })}
+              onChange={(e) => handleTabChange(e.target.value)}
               className="w-full appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-tanavent-blue font-bold shadow-sm"
             >
               {tabs.map((tab) => (
@@ -93,7 +111,7 @@ export const SectionDashboard = () => {
             return (
               <button
                 key={tab.id}
-                onClick={() => changeView({ view: tab.id })}
+                onClick={() => handleTabChange(tab.id)}
                 className={`
                                     flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all whitespace-nowrap flex-1 md:flex-none justify-center
                                     ${isActive
@@ -108,6 +126,7 @@ export const SectionDashboard = () => {
             );
           })}
         </div>
+
 
         {/* Main Action (Only for Inventory tab for now) */}
         {activeTab === "inventory" && (
@@ -174,6 +193,7 @@ export const SectionDashboard = () => {
       <InventoryAddModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        sectionId={sectionId}
       />
     </div>
   );

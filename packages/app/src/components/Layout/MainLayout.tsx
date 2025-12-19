@@ -1,8 +1,8 @@
-import { useViewStore } from "../../stores/viewStore";
 import { useSectionList } from "../../features/organization/api/useSectionHooks";
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Menu } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -11,10 +11,9 @@ interface MainLayoutProps {
 export const MainLayout = ({ children }: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { activeSectionId } =
-    useViewStore();
+  const { sectionId } = useParams<{ sectionId: string }>();
   const { data: sections } = useSectionList();
-  const activeSection = sections?.find((s) => s.id === activeSectionId);
+  const activeSection = sections?.find((s) => s.id === sectionId);
 
   return (
     <div className="min-h-screen bg-surface-base">

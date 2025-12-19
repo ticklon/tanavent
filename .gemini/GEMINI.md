@@ -15,16 +15,18 @@
     *   **対象:**
         *   `activeOrganizationId`: 現在作業中の組織（テナント）。URLには含めず、ログイン後の「コンテキスト」として扱う。
         *   `language`: 表示言語（'ja' / 'en'）。
+        *   `selectedItemId`: (Transient) 選択中のアイテムID。グローバルモーダル用の一時ステート（リロードでクリア）。
     *   **メリット:** 組織IDがURLに含まれないため、単一組織ユーザーにとってURLがクリーンになる。
 
 ## 2. Refactoring Phases
 
-### Phase 1: Frontend Routing & State (基盤移行)
+### Phase 1: Frontend Routing & State (基盤移行) - ✅ Completed
 
 1.  **Store Refactoring (`viewStore.ts`):**
     *   `lastViewState` (DB同期) を廃止。
     *   `activeOrganizationId`, `language` を **Zustand `persist` middleware** を使用して LocalStorage に保存する形式に変更。
     *   API同期ロジック (`syncState`) を削除。
+    *   **Note:** `selectedItemId` を追加し、モーダル制御用の一時ステートとして復活させました（LocalStorage非保存）。
 
 2.  **Router Implementation (`App.tsx` & `routes.tsx`):**
     *   `react-router-dom` を導入。
@@ -48,7 +50,7 @@
     *   `SectionDashboard`:
         *   URLパラメータ (`useParams`) から `sectionId`, `view` を取得して表示内容を決定。
 
-### Phase 2: Cleanup (負債削除)
+### Phase 2: Cleanup (負債削除) - ✅ Completed
 
 1.  **Backend Cleanup:**
     *   `packages/api/src/features/user-state.ts` (状態同期エンドポイント) を削除。

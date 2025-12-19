@@ -1,6 +1,5 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import userState from './features/user-state'
 import inventory from './features/inventory'
 import users from './features/users'
 import organizations from './features/organizations'
@@ -14,8 +13,6 @@ app.use('*', cors())
 app.get('/', (c) => {
     return c.text('Tanavent API is running!')
 })
-
-app.route('/api/me/state', userState)
 
 app.route('/api/inventory', inventory)
 app.route('/api/users', users)

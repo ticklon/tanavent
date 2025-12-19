@@ -35,48 +35,14 @@ export const user = sqliteTable("user", {
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`(strftime('%s', 'now'))`),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(strftime('%s', 'now'))`),
-});
-
-// ★ ユーザー作業状態の永続化テーブル (User Preference)
-// アプリ起動時にこのテーブルを読み込み、前回中断した画面・言語設定を復元します。
-export const userPreference = sqliteTable("user_preference", {
-  // Userテーブルと 1:1 の関係
-  userId: text("user_id")
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-
-  // コンテキスト (前回作業していた組織・セクション)
-  activeOrganizationId: text("active_organization_id"),
-  activeSectionId: text("active_section_id"),
-
-  // 言語設定 (v3 i18n対応)
-  // ブラウザ設定より優先され、API経由で同期されます。
-  language: text("language").default("ja"), // 'ja', 'en', 'vi'
-
-  // 画面状態 (View State)
-  // JSON形式で保存することで、将来的に画面が増えてもスキーマ変更なしで対応可能。
-  // 例: { "view": "inventory", "subView": "detail", "itemId": "123" }
-  lastViewState: text("last_view_state", { mode: "json" })
-    .$type<{
-      view: 'dashboard' | 'inventory' | 'purchasing' | 'stocktaking' | 'settings';
-      subView?: string; // 'list', 'detail-modal'
-      itemId?: string;  // 選択中のアイテムID
-      filters?: Record<string, any>; // 検索条件の保存
-    }>()
-    .default(sql`'{"view": "dashboard"}'`), // デフォルト値
-
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(strftime('%s', 'now'))`),
-});
-
-/**
- * ------------------------------------------------------------------
- * 2. Organization & Scope (Multi-Tenancy)
- * ------------------------------------------------------------------
+      updatedAt: integer("updated_at", { mode: "timestamp" })
+          .notNull()
+          .default(sql`(strftime('%s', 'now'))`),
+  });
+  
+  /**
+   * ------------------------------------------------------------------
+   * 2. Organization & Scope (Multi-Tenancy) * ------------------------------------------------------------------
  */
 
 // 組織 (テナントルート)
@@ -156,12 +122,7 @@ export const invitation = sqliteTable("invitation", {
 });
 
 // --- Relations Definitions (For Drizzle Query Builder) ---
-export const userRelations = relations(user, ({ one }) => ({
-  preference: one(userPreference, {
-    fields: [user.id],
-    references: [userPreference.userId],
-  }),
-}));
+export const userRelations = relations(user, ({ one }) => ({}));
 ```
 
 -----
