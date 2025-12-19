@@ -1,7 +1,13 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { onAuthStateChanged } from "firebase/auth";
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Navigate,
+    Outlet,
+    useNavigate,
+} from "react-router-dom";
 import { useAuthStore } from "./stores/authStore";
 import { useViewStore } from "./stores/viewStore";
 import { auth } from "./lib/firebase";
@@ -19,11 +25,11 @@ import { ProtectedRoute, OrgRequiredRoute } from "./components/Router/Guards";
 
 // Wrapper to use MainLayout as a Router Layout
 const MainLayoutWrapper = () => {
-  return (
-    <MainLayout>
-      <Outlet />
-    </MainLayout>
-  );
+    return (
+        <MainLayout>
+            <Outlet />
+        </MainLayout>
+    );
 };
 
 // Component to handle initial redirect or root path
@@ -42,22 +48,38 @@ const RootRedirect = () => {
 
 function AppRoutes() {
     const navigate = useNavigate();
-    
+
     return (
         <Routes>
             <Route path="/login" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
 
             <Route element={<ProtectedRoute />}>
-                <Route path="/org/select" element={<OrganizationSelect onCreateClick={() => navigate('/org/create')} />} />
-                <Route path="/org/create" element={<OrganizationCreate onBack={() => navigate('/org/select')} />} />
+                <Route
+                    path="/org/select"
+                    element={
+                        <OrganizationSelect onCreateClick={() => navigate("/org/create")} />
+                    }
+                />
+                <Route
+                    path="/org/create"
+                    element={
+                        <OrganizationCreate onBack={() => navigate("/org/select")} />
+                    }
+                />
 
                 <Route element={<OrgRequiredRoute />}>
                     <Route element={<MainLayoutWrapper />}>
                         <Route path="/" element={<RootRedirect />} />
                         <Route path="/settings" element={<OrganizationSettings />} />
-                        <Route path="/sections/:sectionId" element={<Navigate to="inventory" replace />} />
-                        <Route path="/sections/:sectionId/:view" element={<SectionDashboard />} />
+                        <Route
+                            path="/sections/:sectionId"
+                            element={<Navigate to="inventory" replace />}
+                        />
+                        <Route
+                            path="/sections/:sectionId/:view"
+                            element={<SectionDashboard />}
+                        />
                     </Route>
                 </Route>
             </Route>
@@ -68,37 +90,35 @@ function AppRoutes() {
 }
 
 function App() {
-  // initialize removed
-  const {
-    setUser,
-    user: authUser,
-    isLoading: isAuthLoading,
-    setLoading,
-  } = useAuthStore();
+    const {
+        setUser,
+        user: authUser,
+        isLoading: isAuthLoading,
+        setLoading,
+    } = useAuthStore();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [setUser, setLoading]);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+        });
+        return () => unsubscribe();
+    }, [setUser, setLoading]);
 
-  if (isAuthLoading) {    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
+    if (isAuthLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                Loading...
+            </div>
+        );
+    }
+
+    return (
+        <BrowserRouter>
+            <AppRoutes />
+            <InventoryDetailModal />
+        </BrowserRouter>
     );
-  }
-
-  return (
-    <BrowserRouter>
-        <AppRoutes />
-        {/* Global Modal */}
-        <InventoryDetailModal />
-    </BrowserRouter>
-  );
 }
 
 export default App;
-
