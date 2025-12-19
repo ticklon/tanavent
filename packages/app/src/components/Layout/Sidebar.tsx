@@ -16,6 +16,7 @@ import {
   Home,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { NavLink, useNavigate } from "react-router-dom"; // Import Router hooks
 import { useAuthStore } from "../../stores/authStore";
 import { useViewStore } from "../../stores/viewStore";
 import { auth } from "../../lib/firebase";
@@ -39,12 +40,11 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const { user } = useAuthStore();
   const {
     activeOrganizationId,
-    activeSectionId,
-    updateCtx,
-    changeView,
     language,
     changeLanguage,
-  } = useViewStore();
+  } = useViewStore(); // Removed activeSectionId, updateCtx, changeView
+
+  const navigate = useNavigate();
 
   // Auto-update sections using React Query
   const { data: sections = [] } = useSectionList();
@@ -86,13 +86,6 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     changeLanguage(nextLang);
   };
 
-  const handleSectionClick = (sectionId: string) => {
-    if (activeOrganizationId) {
-      updateCtx(activeOrganizationId, sectionId);
-      setIsOpen(false); // Close mobile sidebar on select
-    }
-  };
-
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-surface-base border-r border-border">
       {/* Header / Org Name */}
@@ -124,16 +117,20 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
           <ul className="space-y-1">
             {sections.map((section) => (
               <li key={section.id}>
-                <button
-                  onClick={() => handleSectionClick(section.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeSectionId === section.id
-                      ? "bg-tanavent-blue text-white shadow-sm"
-                      : "text-text-main hover:bg-gray-100"
-                    }`}
+                <NavLink
+                  to={`/sections/${section.id}/inventory`}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-tanavent-blue text-white shadow-sm"
+                        : "text-text-main hover:bg-gray-100"
+                    }`
+                  }
                 >
                   <Layers size={18} />
                   <span>{section.name}</span>
-                </button>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -142,7 +139,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         <div className="mt-4 pt-4 border-t border-border">
           <button
             onClick={() => {
-              changeView({ view: "settings" });
+              navigate("/settings");
               setIsOpen(false);
             }}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-text-main hover:bg-gray-100 transition-colors"
@@ -216,6 +213,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       />
     </div>
   );
+
 
   return (
     <>

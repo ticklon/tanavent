@@ -7,11 +7,12 @@ import { useInventoryMutation } from '../api/useInventoryHooks'
 type Props = {
     isOpen: boolean;
     onClose: () => void;
+    sectionId?: string;
 }
 
-export const InventoryAddModal = ({ isOpen, onClose }: Props) => {
+export const InventoryAddModal = ({ isOpen, onClose, sectionId }: Props) => {
     const { t } = useTranslation(['common', 'inventory']);
-    const { createItem } = useInventoryMutation();
+    const { createItem } = useInventoryMutation(sectionId);
 
     const [name, setName] = useState('');
     const [vintage, setVintage] = useState<string>('');

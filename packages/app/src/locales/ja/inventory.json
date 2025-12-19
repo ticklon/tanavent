@@ -7,6 +7,11 @@
         "unit": "単位",
         "create": "作成"
     },
+    "tab": {
+        "inventory": "在庫一覧",
+        "purchasing": "仕入れ登録",
+        "stocktaking": "棚卸"
+    },
     "delete": {
         "confirmTitle": "このアイテムを削除しますか？",
         "confirmDescription": "この操作は取り消せません。"

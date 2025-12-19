@@ -2,6 +2,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition, TransitionChild, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { X, Check } from 'lucide-react';
 import { useAuthStore } from '../../../stores/authStore';
 import { useViewStore } from '../../../stores/viewStore';
@@ -21,7 +22,8 @@ type Organization = {
 export const UserSettingsModal = ({ isOpen, onClose }: UserSettingsModalProps) => {
     const { t } = useTranslation(['common', 'settings', 'organization']);
     const { user } = useAuthStore();
-    const { activeOrganizationId, updateCtx } = useViewStore();
+    const { activeOrganizationId, setActiveOrganizationId } = useViewStore();
+    const navigate = useNavigate();
 
     // Profile State
     const [displayName, setDisplayName] = useState('');
@@ -101,7 +103,8 @@ export const UserSettingsModal = ({ isOpen, onClose }: UserSettingsModalProps) =
             if (res.ok) {
                 const newOrg = await res.json();
                 // Switch to new org
-                updateCtx(newOrg.id, null as any);
+                setActiveOrganizationId(newOrg.id);
+                navigate('/');
                 setNewOrgName('');
                 fetchOrganizations(); // Refresh list
                 onClose();
@@ -115,7 +118,8 @@ export const UserSettingsModal = ({ isOpen, onClose }: UserSettingsModalProps) =
 
     const handleSwitchOrg = (orgId: string) => {
         if (orgId === activeOrganizationId) return;
-        updateCtx(orgId, null as any);
+        setActiveOrganizationId(orgId);
+        navigate('/');
         onClose();
     };
 

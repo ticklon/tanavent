@@ -1,6 +1,6 @@
 
 import { Hono } from 'hono';
-import { user, userPreference } from '@tanavent/shared';
+import { user } from '@tanavent/shared';
 import { createDb, Env } from '../db';
 import { firebaseAuth } from '../middleware/auth';
 import { eq } from 'drizzle-orm';
@@ -24,20 +24,13 @@ app.post('/', async (c) => {
     }
 
     // Insert new user
-    await db.batch([
-        db.insert(user).values({
-            id: currentUser.uid,
-            email: currentUser.email,
-            displayName: '', // Can be updated later
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        }),
-        db.insert(userPreference).values({
-            userId: currentUser.uid,
-            language: 'ja', // Default to Japanese as per context
-            // activeOrganizationId etc will be null initially
-        })
-    ]);
+    await db.insert(user).values({
+        id: currentUser.uid,
+        email: currentUser.email,
+        displayName: '', // Can be updated later
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    });
 
     return c.json({ message: 'User created successfully' }, 201);
 });

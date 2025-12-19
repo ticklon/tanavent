@@ -7,8 +7,8 @@ import { useInventoryItem, useInventoryMutation } from '../api/useInventoryHooks
 
 export const InventoryDetailModal = () => {
     const { t } = useTranslation(['common', 'inventory']);
-    const { lastViewState, closeDetail } = useViewStore();
-    const itemId = lastViewState.itemId;
+    const { selectedItemId, closeDetail } = useViewStore();
+    const itemId = selectedItemId;
     // const { updateItem, deleteItem } = useInventoryMutation(); // Moved to Form
 
     // Local state for delete confirmation
