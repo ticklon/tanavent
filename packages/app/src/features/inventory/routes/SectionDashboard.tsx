@@ -18,9 +18,6 @@ export const SectionDashboard = () => {
   const { sectionId, view } = useParams<{ sectionId: string; view?: string }>();
   const navigate = useNavigate();
 
-  // Fetch sections to get name
-  const { data: sections } = useSectionList();
-  const activeSection = sections?.find((s) => s.id === sectionId);
 
   // Determine active tab from URL param
   const activeTab: TabType =
@@ -68,12 +65,6 @@ export const SectionDashboard = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-2 md:p-6 space-y-6">
-      {/* Mobile Header: Active Section Name */}
-      <div className="md:hidden pb-2 border-b border-gray-100">
-          <h1 className="text-xl font-bold text-tanavent-navy">
-              {activeSection?.name || '...'}
-          </h1>
-      </div>
 
       {/* Header & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
