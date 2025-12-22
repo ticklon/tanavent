@@ -124,7 +124,12 @@ Headless UI の `Dialog` コンポーネントを使用します。
 
 Tech Spec v3.0 で定義された「単一HTMLによるレスポンシブ切り替え」のデザイン詳細です。
 
-### 5.1. Mobile View (\< 768px)
+### 5.1. Mobile Header Strategy
+
+*   **Centralized Header:** モバイル時のセクション名表示などのヘッダー要素は、個別の機能コンポーネントではなく、`MainLayout` で一元管理します。
+*   **Consistency:** これにより、どの画面に遷移してもヘッダーの挙動（ハンバーガーメニューの位置など）が統一され、二重ヘッダーのバグを防ぎます。
+
+### 5.2. Mobile View (\< 768px)
 
 **"Card Stack Style"**
 
