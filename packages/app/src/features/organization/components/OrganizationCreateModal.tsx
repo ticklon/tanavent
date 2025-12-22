@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, Radio, Label, Description } from '@headlessui/react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +26,7 @@ export const OrganizationCreateModal = ({ isOpen, onClose }: OrganizationCreateM
     const { user } = useAuthStore();
     const { setActiveOrganizationId } = useViewStore();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const [name, setName] = useState('');
     const [selectedPlan, setSelectedPlan] = useState(PLANS[0]);
@@ -54,6 +56,11 @@ export const OrganizationCreateModal = ({ isOpen, onClose }: OrganizationCreateM
 
             if (res.ok) {
                 const newOrg = await res.json();
+                
+                // 1. Invalidate cache to fetch the latest organization list including the new one
+                await queryClient.invalidateQueries({ queryKey: ['organizations'] });
+                
+                // 2. Set Active ID and Navigate
                 setActiveOrganizationId(newOrg.id);
                 navigate('/');
                 onClose();

@@ -9,6 +9,7 @@ import { createAuthClient } from '../../../lib/client';
 import { auth } from '../../../lib/firebase';
 import { AuthLayout } from '../../auth/components/AuthLayout';
 import { OrganizationCreateModal } from './OrganizationCreateModal';
+import { IconMain } from '../../../components/Icon/IconS';
 
 type Organization = {
     id: string;
@@ -62,8 +63,8 @@ export const OrganizationSelect = () => {
             <div className="space-y-6">
                 {orgs.length === 0 ? (
                     <div className="text-center py-8">
-                        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50 mb-6">
-                            <Building2 className="h-10 w-10 text-tanavent-blue" />
+                        <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-4xl bg-blue-50 mb-6">
+                            <IconMain />
                         </div>
                         <h2 className="text-2xl font-bold text-tanavent-navy mb-2">
                             Welcome to Tanavent!
@@ -81,6 +82,9 @@ export const OrganizationSelect = () => {
                     </div>
                 ) : (
                     <>
+                        <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-4xl bg-blue-50 mb-6">
+                            <IconMain />
+                        </div>
                         <ul className="space-y-3">
                             {orgs.map((org) => (
                                 <li key={org.id}>
