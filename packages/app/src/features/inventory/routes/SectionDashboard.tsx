@@ -6,7 +6,6 @@ import { useViewStore } from "../../../stores/viewStore";
 import { useInventoryQuery } from "../api/useInventoryHooks";
 import { InventoryList } from "../components/InventoryList";
 import { InventoryAddModal } from "../components/InventoryAddModal";
-import { useSectionList } from "../../organization/api/useSectionHooks";
 
 type TabType = "inventory" | "purchasing" | "stocktaking";
 

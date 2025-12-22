@@ -17,6 +17,29 @@
     "msg": {
         "create_success": "Organization created successfully"
     },
+    "modal": {
+        "title": "Create New Organization",
+        "name_placeholder": "e.g., My Restaurant",
+        "plan_label": "Select Plan"
+    },
+    "plan": {
+        "free": {
+            "name": "Free",
+            "desc": "For small teams and personal use.",
+            "price": "$0 / mo"
+        },
+        "pro": {
+            "name": "Pro",
+            "desc": "Advanced features for growing businesses.",
+            "price": "$29 / mo"
+        },
+        "unlimited": {
+            "name": "Unlimited",
+            "desc": "For large enterprises with custom needs.",
+            "price": "Contact Us"
+        },
+        "coming_soon": "Coming Soon"
+    },
     "settings": {
         "title": "Organization Settings",
         "subtitle": "Manage your sections and settings",

@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { createUserWithEmailAndPassword, sendEmailVerification, User } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../../lib/firebase';
 import { AuthLayout } from '../components/AuthLayout';
 import { useTranslation } from 'react-i18next';

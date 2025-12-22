@@ -16,7 +16,7 @@ export const InventoryDetailModal = () => {
     // Note: 'isOpen' is derived from whether 'itemId' exists in the state
     const isOpen = !!itemId;
 
-    const { data: item, isLoading } = useInventoryItem(itemId);
+    const { data: item, isLoading } = useInventoryItem(itemId ?? undefined);
 
     return (
         <Dialog

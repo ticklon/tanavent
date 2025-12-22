@@ -17,6 +17,29 @@
     "msg": {
         "create_success": "組織を作成しました"
     },
+    "modal": {
+        "title": "新しい組織を作成",
+        "name_placeholder": "例: 株式会社タナベント",
+        "plan_label": "プラン選択"
+    },
+    "plan": {
+        "free": {
+            "name": "フリー",
+            "desc": "小規模チームや個人利用向け",
+            "price": "¥0 / 月"
+        },
+        "pro": {
+            "name": "プロ",
+            "desc": "成長中のビジネス向け高度な機能",
+            "price": "¥2,900 / 月"
+        },
+        "unlimited": {
+            "name": "アンリミテッド",
+            "desc": "大規模企業向けカスタムプラン",
+            "price": "要問い合わせ"
+        },
+        "coming_soon": "近日公開"
+    },
     "settings": {
         "title": "組織設定",
         "subtitle": "セクションと設定を管理します",

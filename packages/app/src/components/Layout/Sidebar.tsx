@@ -8,12 +8,10 @@ import {
 import {
   X,
   LogOut,
-  Building,
   Layers,
   UserCog,
   Settings,
   Languages,
-  Home,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom"; // Import Router hooks
@@ -22,6 +20,7 @@ import { useViewStore } from "../../stores/viewStore";
 import { auth } from "../../lib/firebase";
 import { createAuthClient } from "../../lib/client";
 import { UserSettingsModal } from "../../features/settings/components/UserSettingsModal";
+import { OrganizationCreateModal } from "../../features/organization/components/OrganizationCreateModal";
 import { useSectionList } from "../../features/organization/api/useSectionHooks";
 import { IconS } from "../Icon/IconS";
 
@@ -42,7 +41,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     activeOrganizationId,
     language,
     changeLanguage,
-  } = useViewStore(); // Removed activeSectionId, updateCtx, changeView
+  } = useViewStore();
 
   const navigate = useNavigate();
 
@@ -51,6 +50,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
   const [organizationName, setOrganizationName] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCreateOrgModalOpen, setIsCreateOrgModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchOrgName = async () => {
@@ -210,6 +210,12 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       <UserSettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        onCreateOrg={() => setIsCreateOrgModalOpen(true)}
+      />
+      
+      <OrganizationCreateModal
+        isOpen={isCreateOrgModalOpen}
+        onClose={() => setIsCreateOrgModalOpen(false)}
       />
     </div>
   );

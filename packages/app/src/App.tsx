@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { onAuthStateChanged } from "firebase/auth";
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "./stores/authStore";
 import { useViewStore } from "./stores/viewStore";
 import { auth } from "./lib/firebase";
@@ -11,7 +10,6 @@ import { SignUp } from "./features/auth/routes/SignUp";
 import "./app.css";
 import i18n from "./lib/i18n";
 import { OrganizationSelect } from "./features/organization/components/OrganizationSelect";
-import { OrganizationCreate } from "./features/organization/components/OrganizationCreate";
 import { OrganizationSettings } from "./features/organization/components/OrganizationSettings";
 import { SectionDashboard } from "./features/inventory/routes/SectionDashboard";
 import { MainLayout } from "./components/Layout/MainLayout";
@@ -41,16 +39,13 @@ const RootRedirect = () => {
 };
 
 function AppRoutes() {
-    const navigate = useNavigate();
-    
     return (
         <Routes>
             <Route path="/login" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
 
             <Route element={<ProtectedRoute />}>
-                <Route path="/org/select" element={<OrganizationSelect onCreateClick={() => navigate('/org/create')} />} />
-                <Route path="/org/create" element={<OrganizationCreate onBack={() => navigate('/org/select')} />} />
+                <Route path="/org/select" element={<OrganizationSelect />} />
 
                 <Route element={<OrgRequiredRoute />}>
                     <Route element={<MainLayoutWrapper />}>
@@ -71,7 +66,6 @@ function App() {
   const { language } = useViewStore();
   const {
     setUser,
-    user: authUser,
     isLoading: isAuthLoading,
     setLoading,
   } = useAuthStore();
